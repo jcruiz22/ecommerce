@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+dist
+.env
+.git
+.gitignore
+.github
+README.md
+CODEBASE_REVIEW.md
+API_TESTING_GUIDE.md
+.DS_Store
+.vscode
+.idea
+*.log
+*.pem

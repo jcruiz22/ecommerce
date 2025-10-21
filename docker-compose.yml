@@ -1,0 +1,47 @@
+services:
+  mongo:
+    image: mongo:8.0
+    container_name: ecommerce-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: ecommerce
+    volumes:
+      - mongo-data:/data/db
+
+
+
+  user-service:
+    build:
+      context: ./services
+      dockerfile: user-services/Dockerfile
+    container_name: user-service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGO_URI=mongodb://admin:admin123@mongo:27017/ecommerce?authSource=admin
+      - JWT_SECRET=change_this_secret
+    depends_on:
+      - mongo
+
+  product-service:
+    build:
+      context: ./services
+      dockerfile: product-services/Dockerfile
+    container_name: product-service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - MONGO_URI=mongodb://admin:admin123@mongo:27017/ecommerce?authSource=admin
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data:
