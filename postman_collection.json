@@ -321,6 +321,134 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart by User ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3003/cart/{{user_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["cart", "{{user_id}}"]
+            },
+            "description": "Get cart for a specific user. Returns empty cart if not found."
+          },
+          "response": []
+        },
+        {
+          "name": "Create or Update Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.environment.set('cart_id', pm.response.json()._id);",
+                  "    pm.test('Total Price Calculated', function () {",
+                  "        pm.expect(pm.response.json().totalPrice).to.exist;",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"prod001\",\n      \"name\": \"Laptop\",\n      \"price\": 1299.99,\n      \"quantity\": 1\n    },\n    {\n      \"productId\": \"prod002\",\n      \"name\": \"Wireless Mouse\",\n      \"price\": 29.99,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": \"prod003\",\n      \"name\": \"USB-C Cable\",\n      \"price\": 9.99,\n      \"quantity\": 3\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3003/cart",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["cart"]
+            },
+            "description": "Create a new cart or update existing cart with items. Automatically calculates total price."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart - Change Quantities",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"prod001\",\n      \"name\": \"Laptop\",\n      \"price\": 1299.99,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": \"prod002\",\n      \"name\": \"Wireless Mouse\",\n      \"price\": 29.99,\n      \"quantity\": 5\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3003/cart",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["cart"]
+            },
+            "description": "Update cart by changing item quantities. Total price is recalculated."
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart - Remove All Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": []\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3003/cart",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["cart"]
+            },
+            "description": "Clear cart by setting items to empty array"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3003/cart/{{user_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3003",
+              "path": ["cart", "{{user_id}}"]
+            },
+            "description": "Completely delete a user's cart from database"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -341,6 +469,11 @@
     },
     {
       "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cart_id",
       "value": "",
       "type": "string"
     }
