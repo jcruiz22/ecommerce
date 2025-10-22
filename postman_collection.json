@@ -449,6 +449,157 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    pm.environment.set('order_id', pm.response.json()._id);",
+                  "    pm.test('Order Status is Pending', function () {",
+                  "        pm.expect(pm.response.json().status).to.equal('Pending');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"quantity\": 1,\n      \"price\": 1299.99\n    }\n  ],\n  \"totalAmount\": 1299.99\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3004/orders",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders"]
+            },
+            "description": "Create a new order. Automatically deletes the user's cart after creation."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3004/orders",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders"]
+            },
+            "description": "Get all orders in the system"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Orders by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3004/orders/status/Pending",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders", "status", "Pending"]
+            },
+            "description": "Get orders by status (Pending, Processing, Shipped, Delivered, Cancelled)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Orders by User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3004/orders/user/{{user_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders", "user", "{{user_id}}"]
+            },
+            "description": "Get all orders for a specific user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3004/orders/{{order_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Get a specific order by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Processing\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3004/orders/{{order_id}}/status",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders", "{{order_id}}", "status"]
+            },
+            "description": "Update order status. Valid statuses: Pending, Processing, Shipped, Delivered, Cancelled"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3004/orders/{{order_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3004",
+              "path": ["orders", "{{order_id}}"]
+            },
+            "description": "Delete a specific order"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -474,6 +625,11 @@
     },
     {
       "key": "cart_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "order_id",
       "value": "",
       "type": "string"
     }
