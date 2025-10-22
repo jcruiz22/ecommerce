@@ -4,7 +4,7 @@ WORKDIR /app
 
 # install build deps
 FROM base AS builder
-COPY order-service/package.json oreder-service/package-lock.json* ./
+COPY order-service/package.json order-service/package-lock.json* ./
 RUN npm install
 COPY order-service/tsconfig.json ./
 COPY order-service/src ./src

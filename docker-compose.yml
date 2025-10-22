@@ -57,5 +57,19 @@ services:
     depends_on:
       - mongo
 
+  order-service:
+    build:
+      context: ./services
+      dockerfile: order-service/Dockerfile
+    container_name: order-service
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - MONGO_URI=mongodb://admin:admin123@mongo:27017/ecommerce?authSource=admin
+    depends_on:
+      - mongo
+
 volumes:
   mongo-data:
