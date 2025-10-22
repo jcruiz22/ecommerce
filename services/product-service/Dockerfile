@@ -4,10 +4,10 @@ WORKDIR /app
 
 # install build deps
 FROM base AS builder
-COPY product-services/package.json product-services/package-lock.json* ./
+COPY product-service/package.json product-service/package-lock.json* ./
 RUN npm install
-COPY product-services/tsconfig.json ./
-COPY product-services/src ./src
+COPY product-service/tsconfig.json ./
+COPY product-service/src ./src
 RUN npm run build
 
 # production image
@@ -16,6 +16,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY product-services/package.json ./
+COPY product-service/package.json ./
 EXPOSE 3002
 CMD ["node", "dist/index.js"]

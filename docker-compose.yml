@@ -17,7 +17,7 @@ services:
   user-service:
     build:
       context: ./services
-      dockerfile: user-services/Dockerfile
+      dockerfile: user-service/Dockerfile
     container_name: user-service
     restart: unless-stopped
     ports:
@@ -32,7 +32,7 @@ services:
   product-service:
     build:
       context: ./services
-      dockerfile: product-services/Dockerfile
+      dockerfile: product-service/Dockerfile
     container_name: product-service
     restart: unless-stopped
     ports:
@@ -46,7 +46,7 @@ services:
   cart-service:
     build:
       context: ./services
-      dockerfile: cart-services/Dockerfile
+      dockerfile: cart-service/Dockerfile
     container_name: cart-service
     restart: unless-stopped
     ports:
