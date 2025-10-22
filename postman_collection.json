@@ -369,7 +369,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"price\": 1299.99,\n      \"quantity\": 1\n    }\n  ]\n}"
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"quantity\": 2\n    }\n  ]\n}"
             },
             "url": {
               "raw": "http://localhost:3003/cart",
@@ -378,7 +378,7 @@
               "port": "3003",
               "path": ["cart"]
             },
-            "description": "Create a new cart or update existing cart with items. Use ObjectIds for userId and productId. Automatically calculates total price."
+            "description": "Create or update cart. UI sends only productId and quantity. Cart-Service fetches current price and validates stock from Product-Service. Price is NOT sent by client (security)."
           },
           "response": []
         },
@@ -394,7 +394,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"price\": 1299.99,\n      \"quantity\": 2\n    }\n  ]\n}"
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"quantity\": 3\n    }\n  ]\n}"
             },
             "url": {
               "raw": "http://localhost:3003/cart",
@@ -403,7 +403,7 @@
               "port": "3003",
               "path": ["cart"]
             },
-            "description": "Update cart by changing item quantities. Total price is recalculated. Use ObjectIds for userId and productId."
+            "description": "Update cart by changing item quantities. Cart-Service recalculates price from Product-Service. Price is automatically fetched (NOT sent by client)."
           },
           "response": []
         },
