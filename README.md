@@ -10,6 +10,7 @@ Complete ecommerce microservices architecture with User Authentication, Products
 | **Product Service** | 3002 | Product management (CRUD) |
 | **Cart Service** | 3003 | Shopping cart management |
 | **Order Service** | 3004 | Order management & processing |
+| **Payment Service** | 3005 | Payment processing & refunds |
 | **MongoDB** | 27017 | Database |
 
 ## Quick Start
@@ -53,31 +54,32 @@ docker compose up mongo -d
 
 **Step 2: Install dependencies for each service**
 ```bash
-cd services/user-services && npm install
-cd services/product-services && npm install
-cd services/cart-services && npm install
+cd services/user-service && npm install
+cd services/product-service && npm install
+cd services/cart-service && npm install
 cd services/order-service && npm install
+cd services/payment-service && npm install
 ```
 
 **Step 3: Run each service in separate terminal**
 
 Terminal 1 - User Service:
 ```bash
-cd services/user-services
+cd services/user-service
 npm run dev
 # Runs on http://localhost:3001
 ```
 
 Terminal 2 - Product Service:
 ```bash
-cd services/product-services
+cd services/product-service
 npm run dev
 # Runs on http://localhost:3002
 ```
 
 Terminal 3 - Cart Service:
 ```bash
-cd services/cart-services
+cd services/cart-service
 npm run dev
 # Runs on http://localhost:3003
 ```
@@ -87,6 +89,13 @@ Terminal 4 - Order Service:
 cd services/order-service
 npm run dev
 # Runs on http://localhost:3004
+```
+
+Terminal 5 - Payment Service:
+```bash
+cd services/payment-service
+npm run dev
+# Runs on http://localhost:3005
 ```
 
 **Stop all services:**
@@ -108,8 +117,10 @@ docker compose down
 2. **Create a Product** → Get `product_id`
 3. **Create Cart** → Add items
 4. **Create Order** → Auto-deletes cart
-5. **Update Order Status** → Change status
-6. **View Orders** → By status or user
+5. **Create Payment** → Process payment (auto-updates order status)
+6. **Update Order Status** → Change status manually if needed
+7. **View Payments** → By order, user, or status
+8. **Refund Payment** → Refund completed payment
 
 ---
 
@@ -140,6 +151,7 @@ Import `postman_collection.json` in Postman for complete API documentation with:
 - `product_id` - Captured from create product
 - `cart_id` - Captured from create cart
 - `order_id` - Captured from create order
+- `payment_id` - Captured from create payment
 
 ---
 
@@ -172,6 +184,18 @@ Import `postman_collection.json` in Postman for complete API documentation with:
 
 **Order Statuses:** Pending, Processing, Shipped, Delivered, Cancelled
 
+### Payment Service (Port 3005)
+- `GET /payments` - Get all payments
+- `POST /payments` - Create payment
+- `GET /payments/:id` - Get payment by ID
+- `GET /payments/order/:orderId` - Get payments by order
+- `GET /payments/user/:userId` - Get user's payments
+- `GET /payments/status/:status` - Get payments by status
+- `PUT /payments/:id/refund` - Refund a payment
+
+**Payment Methods:** Credit Card, Debit Card, PayPal, Bank Transfer
+**Payment Statuses:** Pending, Completed, Failed, Refunded
+
 ---
 
 ## Database Structure
@@ -181,6 +205,7 @@ MongoDB Collections:
 - **products** - Product catalog
 - **carts** - Shopping carts (auto-deleted after order)
 - **orders** - Order history with status tracking
+- **payments** - Payment records with transaction details
 
 ---
 
@@ -191,14 +216,14 @@ MongoDB Collections:
 │   Client    │
 └──────┬──────┘
        │
-   ┌───┴───────────┬────────────┬────────────┐
-   │               │            │            │
-┌──▼──┐        ┌──▼──┐      ┌──▼──┐      ┌──▼──┐
-│Auth │        │Prod │      │Cart │      │Order│
-│3001 │        │3002 │      │3003 │      │3004 │
-└──┬──┘        └──┬──┘      └──┬──┘      └──┬──┘
-   │               │            │            │
-   └───────────────┴────────────┴────────────┘
+   ┌───┴───────────┬────────────┬────────────┬──────────┐
+   │               │            │            │          │
+┌──▼──┐        ┌──▼──┐      ┌──▼──┐      ┌──▼──┐   ┌──▼───┐
+│Auth │        │Prod │      │Cart │      │Order│   │Pay   │
+│3001 │        │3002 │      │3003 │      │3004 │   │3005  │
+└──┬──┘        └──┬──┘      └──┬──┘      └──┬──┘   └──┬───┘
+   │               │            │            │         │
+   └───────────────┴────────────┴────────────┴─────────┘
                    │
              ┌─────▼─────┐
              │  MongoDB   │
@@ -213,10 +238,11 @@ MongoDB Collections:
 ### File Structure
 ```
 services/
-├── user-services/       # Authentication service
-├── product-services/    # Product management
-├── cart-services/       # Shopping cart
-└── order-service/       # Order processing
+├── user-service/        # Authentication service
+├── product-service/     # Product management
+├── cart-service/        # Shopping cart
+├── order-service/       # Order processing
+└── payment-service/     # Payment processing
 ```
 
 ### Hot Reload in Development
@@ -260,10 +286,11 @@ docker compose up mongo -d
 npm install
 
 # For all services:
-cd services/user-services && npm install
-cd services/product-services && npm install
-cd services/cart-services && npm install
+cd services/user-service && npm install
+cd services/product-service && npm install
+cd services/cart-service && npm install
 cd services/order-service && npm install
+cd services/payment-service && npm install
 ```
 
 ---

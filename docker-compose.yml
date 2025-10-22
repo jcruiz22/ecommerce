@@ -73,5 +73,21 @@ services:
       - mongo
       - cart-service
 
+  payment-service:
+    build:
+      context: ./services
+      dockerfile: payment-service/Dockerfile
+    container_name: payment-service
+    restart: unless-stopped
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - MONGO_URI=mongodb://admin:admin123@mongo:27017/ecommerce?authSource=admin
+      - ORDER_SERVICE_URL=http://order-service:3004
+    depends_on:
+      - mongo
+      - order-service
+
 volumes:
   mongo-data:
