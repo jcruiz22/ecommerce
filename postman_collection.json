@@ -481,7 +481,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{product_id}}\",\n      \"quantity\": 1,\n      \"price\": 1299.99\n    }\n  ],\n  \"totalAmount\": 1299.99\n}"
+              "raw": "{\n  \"userId\": \"{{user_id}}\"\n}"
             },
             "url": {
               "raw": "http://localhost:3004/orders",
@@ -490,7 +490,7 @@
               "port": "3004",
               "path": ["orders"]
             },
-            "description": "Create a new order. Automatically deletes the user's cart after creation."
+            "description": "Create a new order from user's cart. Fetches items and total from cart-service, then deletes the cart."
           },
           "response": []
         },

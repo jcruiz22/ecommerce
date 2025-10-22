@@ -68,8 +68,10 @@ services:
     environment:
       - PORT=3004
       - MONGO_URI=mongodb://admin:admin123@mongo:27017/ecommerce?authSource=admin
+      - CART_SERVICE_URL=http://cart-service:3003
     depends_on:
       - mongo
+      - cart-service
 
 volumes:
   mongo-data:
